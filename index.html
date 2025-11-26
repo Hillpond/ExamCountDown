@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown to December 4th</title>
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-accent: #0f172a;
+      --primary: #38bdf8;
+      --primary-soft: rgba(56, 189, 248, 0.1);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --card-radius: 1.5rem;
+      --shadow-soft: 0 20px 40px rgba(15, 23, 42, 0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    main {
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #0b1220, #020617);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 2rem 1.75rem 2.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+      .card {
+        padding: 2.5rem 2.25rem 2.75rem;
+      }
+    }
+
+    .glow {
+      position: absolute;
+      inset: -50%;
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.2), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 3vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .dot {
+      width: 0.8rem;
+      height: 0.8rem;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #f9fafb, #38bdf8);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.8);
+      flex-shrink: 0;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .target-date {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1.75rem;
+    }
+
+    @media (min-width: 480px) {
+      .countdown-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .time-block {
+      background: radial-gradient(circle at top, var(--primary-soft), transparent 60%);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 1rem;
+      padding: 0.8rem 0.7rem 0.9rem;
+      text-align: center;
+      backdrop-filter: blur(18px);
+    }
+
+    .time-value {
+      font-size: clamp(1.5rem, 3vw, 1.9rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.15rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+
+    .status {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .status strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .done {
+      color: #22c55e;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="card" aria-label="Countdown to December 4th">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="card-inner">
+        <h1>
+          <span class="dot" aria-hidden="true"></span>
+          Countdown to December 4th
+        </h1>
+        <p class="subtitle">
+          Time left until
+          <span id="target-date-text" class="target-date"></span>
+        </p>
+
+        <div class="countdown-grid" aria-live="polite">
+          <div class="time-block">
+            <div id="days" class="time-value">--</div>
+            <div class="time-label">Days</div>
+          </div>
+          <div class="time-block">
+            <div id="hours" class="time-value">--</div>
+            <div class="time-label">Hours</div>
+          </div>
+          <div class="time-block">
+            <div id="minutes" class="time-value">--</div>
+            <div class="time-label">Minutes</div>
+          </div>
+          <div class="time-block">
+            <div id="seconds" class="time-value">--</div>
+            <div class="time-label">Seconds</div>
+          </div>
+        </div>
+
+        <p id="status" class="status">
+          The countdown is running…
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Always count down to the *next* December 4th
+    function getNextDecember4th() {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+
+      // Months are 0-based: 11 = December
+      let target = new Date(currentYear, 11, 4, 0, 0, 0, 0);
+
+      if (now >= target) {
+        target = new Date(currentYear + 1, 11, 4, 0, 0, 0, 0);
+      }
+
+      return target;
+    }
+
+    const targetDate = getNextDecember4th();
+
+    // Set label text like: December 4, 2025
+    document.getElementById("target-date-text").textContent =
+      targetDate.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+    function pad(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate.getTime() - now;
+      const statusEl = document.getElementById("status");
+
+      if (distance <= 0) {
+        document.getElementById("days").textContent = "00";
+        document.getElementById("hours").textContent = "00";
+        document.getElementById("minutes").textContent = "00";
+        document.getElementById("seconds").textContent = "00";
+        statusEl.innerHTML =
+          '<span class="done"><strong>It’s December 4th! 🎉</strong></span>';
+        return;
+      }
+
+      const dayMs = 1000 * 60 * 60 * 24;
+      const hourMs = 1000 * 60 * 60;
+      const minuteMs = 1000 * 60;
+      const secondMs = 1000;
+
+      const days = Math.floor(distance / dayMs);
+      const hours = Math.floor((distance % dayMs) / hourMs);
+      const minutes = Math.floor((distance % hourMs) / minuteMs);
+      const seconds = Math.floor((distance % minuteMs) / secondMs);
+
+      document.getElementById("days").textContent = pad(days);
+      document.getElementById("hours").textContent = pad(hours);
+      document.getElementById("minutes").textContent = pad(minutes);
+      document.getElementById("seconds").textContent = pad(seconds);
+
+      statusEl.innerHTML =
+        "Counting down the time left until <strong>December 4th</strong>.";
+    }
+
+    // Start immediately and then tick every second
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
