@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Countdown to December 4th</title>
+  <title>Doomsday Clock – December 4th</title>
   <style>
     :root {
-      --bg: #050816;
-      --bg-accent: #0f172a;
-      --primary: #38bdf8;
-      --primary-soft: rgba(56, 189, 248, 0.1);
-      --text-main: #e5e7eb;
+      --bg: #020106;
+      --bg-accent: #050816;
+      --primary: #f97373;
+      --primary-soft: rgba(239, 68, 68, 0.12);
+      --text-main: #f9fafb;
       --text-muted: #9ca3af;
       --card-radius: 1.5rem;
-      --shadow-soft: 0 20px 40px rgba(15, 23, 42, 0.8);
+      --shadow-soft: 0 25px 60px rgba(0, 0, 0, 0.9);
+      --danger: #ef4444;
+      --danger-soft: rgba(248, 113, 113, 0.2);
     }
 
     * {
@@ -26,7 +28,9 @@
       min-height: 100vh;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
-      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      background:
+        radial-gradient(circle at top, #1f2937 0, #020617 55%),
+        radial-gradient(circle at bottom, #450a0a 0, #020617 55%);
       color: var(--text-main);
       display: flex;
       align-items: center;
@@ -35,15 +39,15 @@
     }
 
     main {
-      max-width: 600px;
+      max-width: 640px;
       width: 100%;
     }
 
     .card {
-      background: radial-gradient(circle at top left, #0b1220, #020617);
+      background: radial-gradient(circle at top left, #020617, #020106 60%);
       border-radius: var(--card-radius);
       box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(148, 163, 184, 0.2);
+      border: 1px solid rgba(148, 27, 27, 0.6);
       padding: 2.5rem 2.25rem 2.75rem;
       position: relative;
       overflow: hidden;
@@ -57,9 +61,27 @@
 
     .glow {
       position: absolute;
-      inset: -50%;
-      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.2), transparent 60%);
-      opacity: 0.7;
+      inset: -40%;
+      background:
+        radial-gradient(circle at top, rgba(239, 68, 68, 0.25), transparent 65%),
+        radial-gradient(circle at bottom right, rgba(248, 113, 113, 0.2), transparent 70%);
+      opacity: 0.9;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .scanline {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.3) 0,
+        rgba(15, 23, 42, 0.3) 1px,
+        transparent 2px,
+        transparent 3px
+      );
+      mix-blend-mode: soft-light;
+      opacity: 0.5;
       pointer-events: none;
     }
 
@@ -68,29 +90,110 @@
       z-index: 1;
     }
 
-    h1 {
-      font-size: clamp(2rem, 3vw, 2.5rem);
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      margin-bottom: 0.25rem;
+    /* Doomsday header with glitch effect */
+    .headline-row {
       display: flex;
       align-items: center;
-      gap: 0.55rem;
+      gap: 0.75rem;
+      margin-bottom: 0.35rem;
     }
 
     .dot {
-      width: 0.8rem;
-      height: 0.8rem;
+      width: 0.9rem;
+      height: 0.9rem;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #f9fafb, #38bdf8);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.8);
+      background: radial-gradient(circle at 30% 30%, #fee2e2, var(--danger));
+      box-shadow:
+        0 0 10px rgba(239, 68, 68, 0.8),
+        0 0 30px rgba(220, 38, 38, 0.7);
       flex-shrink: 0;
+      animation: pulse 1.4s infinite alternate;
+    }
+
+    .dot::after {
+      content: "";
+      position: absolute;
+      width: 0.9rem;
+      height: 0.9rem;
+      border-radius: 999px;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.85;
+      }
+      100% {
+        transform: scale(1.3);
+        opacity: 1;
+      }
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 3.1vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      position: relative;
+      color: var(--primary);
+      text-shadow:
+        0 0 8px rgba(248, 113, 113, 0.7),
+        0 0 20px rgba(248, 113, 113, 0.5);
+    }
+
+    .glitch {
+      position: relative;
+      display: inline-block;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      clip-path: inset(0 0 50% 0);
+      opacity: 0.75;
+      pointer-events: none;
+    }
+
+    .glitch::before {
+      transform: translate(-1px, -1px);
+      color: #f97373;
+      mix-blend-mode: screen;
+      animation: glitchTop 2s infinite linear alternate-reverse;
+    }
+
+    .glitch::after {
+      transform: translate(1px, 1px);
+      color: #fb7185;
+      mix-blend-mode: screen;
+      clip-path: inset(50% 0 0 0);
+      animation: glitchBottom 1.7s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitchTop {
+      0% { clip-path: inset(0 0 55% 0); }
+      50% { clip-path: inset(0 0 30% 0); transform: translate(-1px, -0.5px); }
+      100% { clip-path: inset(0 0 45% 0); transform: translate(-0.5px, -1px); }
+    }
+
+    @keyframes glitchBottom {
+      0% { clip-path: inset(55% 0 0 0); }
+      50% { clip-path: inset(35% 0 0 0); transform: translate(0.5px, 1px); }
+      100% { clip-path: inset(45% 0 0 0); transform: translate(1px, 0.5px); }
     }
 
     .subtitle {
       font-size: 0.95rem;
       color: var(--text-muted);
       margin-bottom: 1rem;
+    }
+
+    .subtitle strong {
+      color: var(--danger);
     }
 
     .target-date {
@@ -105,8 +208,9 @@
       margin-bottom: 1.25rem;
       padding: 0.25rem;
       border-radius: 999px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(127, 29, 29, 0.8);
+      box-shadow: 0 0 18px rgba(127, 29, 29, 0.5);
     }
 
     .mode-btn {
@@ -119,19 +223,21 @@
       border-radius: 999px;
       cursor: pointer;
       transition: background 0.15s ease, color 0.15s ease, transform 0.05s ease;
-      font-weight: 500;
-      letter-spacing: 0.06em;
+      font-weight: 600;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
     .mode-btn.active {
-      background: var(--primary);
-      color: #020617;
+      background: var(--danger);
+      color: #020106;
       transform: translateY(-1px);
+      box-shadow: 0 0 18px rgba(248, 113, 113, 0.6);
     }
 
     .mode-btn:hover:not(.active) {
-      background: rgba(148, 163, 184, 0.15);
+      background: rgba(127, 29, 29, 0.7);
+      color: #f9fafb;
     }
 
     .countdown-grid {
@@ -148,27 +254,31 @@
     }
 
     .time-block {
-      background: radial-gradient(circle at top, var(--primary-soft), transparent 60%);
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      background: radial-gradient(circle at top, var(--primary-soft), transparent 65%);
+      border: 1px solid rgba(248, 113, 113, 0.45);
       border-radius: 1rem;
       padding: 0.8rem 0.7rem 0.9rem;
       text-align: center;
       backdrop-filter: blur(18px);
+      box-shadow:
+        0 12px 28px rgba(15, 23, 42, 0.9),
+        0 0 10px rgba(127, 29, 29, 0.5);
     }
 
     .time-value {
-      font-size: clamp(1.5rem, 3vw, 1.9rem);
-      font-weight: 700;
-      letter-spacing: 0.08em;
+      font-size: clamp(1.7rem, 3.2vw, 2.1rem);
+      font-weight: 800;
+      letter-spacing: 0.16em;
       margin-bottom: 0.15rem;
       font-variant-numeric: tabular-nums;
+      text-transform: uppercase;
       word-break: break-all;
     }
 
     .time-label {
       font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.22em;
       color: var(--text-muted);
     }
 
@@ -182,8 +292,15 @@
       font-weight: 600;
     }
 
+    .status span.mode-text {
+      color: #fca5a5;
+    }
+
     .done {
       color: #22c55e;
+      text-shadow:
+        0 0 8px rgba(34, 197, 94, 0.8),
+        0 0 20px rgba(34, 197, 94, 0.6);
     }
 
     /* Mode-specific visibility */
@@ -208,16 +325,17 @@
 </head>
 <body>
   <main>
-    <section class="card" aria-label="Countdown to December 4th" data-mode="full">
+    <section class="card" aria-label="Doomsday countdown to December 4th" data-mode="full">
       <div class="glow" aria-hidden="true"></div>
+      <div class="scanline" aria-hidden="true"></div>
       <div class="card-inner">
-        <h1>
+        <div class="headline-row">
           <span class="dot" aria-hidden="true"></span>
-          Countdown to December 4th
-        </h1>
+          <h1 class="glitch" data-text="Doomsday Clock">Doomsday Clock</h1>
+        </div>
 
         <p class="subtitle">
-          Time left until
+          Time remaining until <strong>Doomsday</strong> on
           <span id="target-date-text" class="target-date"></span>
         </p>
 
@@ -250,7 +368,7 @@
         </div>
 
         <p id="status" class="status">
-          The countdown is running…
+          Initializing doomsday sequence…
         </p>
       </div>
     </section>
@@ -262,7 +380,7 @@
       const now = new Date();
       const currentYear = now.getFullYear();
 
-      // Months are 0-based in JS: 11 = December
+      // Months are 0-based: 11 = December
       let target = new Date(currentYear, 11, 4, 0, 0, 0, 0);
 
       if (now >= target) {
@@ -276,7 +394,7 @@
     const cardEl = document.querySelector(".card");
     const statusEl = document.getElementById("status");
 
-    // Set text like: December 4, 2025
+    // Display like: December 4, 2025
     document.getElementById("target-date-text").textContent =
       targetDate.toLocaleDateString(undefined, {
         year: "numeric",
@@ -290,24 +408,23 @@
       return String(value).padStart(2, "0");
     }
 
-    function updateStatusText() {
-      let modeText = "";
+    function modeDescription() {
       switch (mode) {
         case "minutes":
-          modeText = "Showing total minutes remaining.";
-          break;
+          return "Only minutes mode: total minutes remaining.";
         case "hours":
-          modeText = "Showing total hours remaining.";
-          break;
+          return "Only hours mode: total hours remaining.";
         case "seconds":
-          modeText = "Showing total seconds remaining.";
-          break;
+          return "Only seconds mode: every second counts.";
         default:
-          modeText = "Showing days, hours, minutes, and seconds.";
+          return "Full mode: days, hours, minutes and seconds.";
       }
+    }
 
+    function updateStatusText() {
       statusEl.innerHTML =
-        `Counting down the time left until <strong>December 4th</strong>. ${modeText}`;
+        `Doomsday sequence active. Time until <strong>December 4th</strong>. ` +
+        `<span class="mode-text">${modeDescription()}</span>`;
     }
 
     function updateCountdown() {
@@ -320,7 +437,7 @@
         document.getElementById("minutes").textContent = "00";
         document.getElementById("seconds").textContent = "00";
         statusEl.innerHTML =
-          '<span class="done"><strong>It’s December 4th! 🎉</strong></span>';
+          '<span class="done"><strong>Doomsday has arrived. 🎉 (Or… maybe you survived.)</strong></span>';
         return;
       }
 
@@ -346,13 +463,10 @@
         document.getElementById("minutes").textContent = pad(minutes);
         document.getElementById("seconds").textContent = pad(seconds);
       } else if (mode === "minutes") {
-        // Only minutes (total)
         document.getElementById("minutes").textContent = totalMinutes.toLocaleString();
       } else if (mode === "hours") {
-        // Only hours (total)
         document.getElementById("hours").textContent = totalHours.toLocaleString();
       } else if (mode === "seconds") {
-        // Only seconds (total)
         document.getElementById("seconds").textContent = totalSeconds.toLocaleString();
       }
 
@@ -369,12 +483,11 @@
         modeButtons.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
 
-        // Immediately update for new mode
-        updateCountdown();
+        updateCountdown(); // refresh instantly
       });
     });
 
-    // Start immediately and then update every second
+    // Start immediately and tick every second
     updateCountdown();
     setInterval(updateCountdown, 1000);
   </script>
