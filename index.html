@@ -479,7 +479,7 @@
     <section id="landing">
       <h1 class="landing-title">Doomsday Overview</h1>
       <p class="landing-subtitle">
-        Velg hvilken dato du vil se nedtellingen for. Klikk på et kort for å åpne detaljvisning.
+        Velg hvilken dato du vil se nedtellingen for.
       </p>
 
       <div class="landing-grid">
@@ -581,8 +581,8 @@
 
           <div class="mode-switch" aria-label="Choose countdown display mode">
             <button class="detail-mode-btn active" data-mode="full">Full</button>
-            <button class="detail-mode-btn" data-mode="minutes">Only minutes</button>
             <button class="detail-mode-btn" data-mode="hours">Only hours</button>
+            <button class="detail-mode-btn" data-mode="minutes">Only minutes</button>
             <button class="detail-mode-btn" data-mode="seconds">Only seconds</button>
           </div>
 
@@ -617,10 +617,15 @@
     function getNextDate(monthIndex, day) {
       const now = new Date();
       const currentYear = now.getFullYear();
-      let target = new Date(currentYear, monthIndex, day, 0, 0, 0, 0);
+    
+      // Nytt mål: kl 09:00 på morgenen
+      let target = new Date(currentYear, monthIndex, day, 9, 0, 0, 0);
+    
+      // Hvis dato/tid allerede har passert i år → hopp til neste år
       if (now >= target) {
-        target = new Date(currentYear + 1, monthIndex, day, 0, 0, 0, 0);
+        target = new Date(currentYear + 1, monthIndex, day, 9, 0, 0, 0);
       }
+    
       return target;
     }
 
