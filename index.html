@@ -44,14 +44,14 @@
       border-radius: var(--card-radius);
       box-shadow: var(--shadow-soft);
       border: 1px solid rgba(148, 163, 184, 0.2);
-      padding: 2rem 1.75rem 2.25rem;
+      padding: 2.5rem 2.25rem 2.75rem;
       position: relative;
       overflow: hidden;
     }
 
-    @media (min-width: 640px) {
+    @media (max-width: 640px) {
       .card {
-        padding: 2.5rem 2.25rem 2.75rem;
+        padding: 2rem 1.75rem 2.25rem;
       }
     }
 
@@ -90,12 +90,48 @@
     .subtitle {
       font-size: 0.95rem;
       color: var(--text-muted);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .target-date {
       color: var(--primary);
       font-weight: 600;
+    }
+
+    .mode-switch {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1.25rem;
+      padding: 0.25rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .mode-btn {
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, transform 0.05s ease;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .mode-btn.active {
+      background: var(--primary);
+      color: #020617;
+      transform: translateY(-1px);
+    }
+
+    .mode-btn:hover:not(.active) {
+      background: rgba(148, 163, 184, 0.15);
     }
 
     .countdown-grid {
@@ -126,6 +162,7 @@
       letter-spacing: 0.08em;
       margin-bottom: 0.15rem;
       font-variant-numeric: tabular-nums;
+      word-break: break-all;
     }
 
     .time-label {
@@ -148,36 +185,65 @@
     .done {
       color: #22c55e;
     }
+
+    /* Mode-specific visibility */
+    .card[data-mode="minutes"] .block-days,
+    .card[data-mode="minutes"] .block-hours,
+    .card[data-mode="minutes"] .block-seconds {
+      display: none;
+    }
+
+    .card[data-mode="hours"] .block-days,
+    .card[data-mode="hours"] .block-minutes,
+    .card[data-mode="hours"] .block-seconds {
+      display: none;
+    }
+
+    .card[data-mode="seconds"] .block-days,
+    .card[data-mode="seconds"] .block-hours,
+    .card[data-mode="seconds"] .block-minutes {
+      display: none;
+    }
   </style>
 </head>
 <body>
   <main>
-    <section class="card" aria-label="Countdown to December 4th">
+    <section class="card" aria-label="Countdown to December 4th" data-mode="full">
       <div class="glow" aria-hidden="true"></div>
       <div class="card-inner">
         <h1>
           <span class="dot" aria-hidden="true"></span>
           Countdown to December 4th
         </h1>
+
         <p class="subtitle">
           Time left until
           <span id="target-date-text" class="target-date"></span>
         </p>
 
+        <!-- MODE SWITCHER -->
+        <div class="mode-switch" aria-label="Choose countdown display mode">
+          <button class="mode-btn active" data-mode="full">Full</button>
+          <button class="mode-btn" data-mode="minutes">Only minutes</button>
+          <button class="mode-btn" data-mode="hours">Only hours</button>
+          <button class="mode-btn" data-mode="seconds">Only seconds</button>
+        </div>
+
+        <!-- COUNTDOWN VALUES -->
         <div class="countdown-grid" aria-live="polite">
-          <div class="time-block">
+          <div class="time-block block-days">
             <div id="days" class="time-value">--</div>
             <div class="time-label">Days</div>
           </div>
-          <div class="time-block">
+          <div class="time-block block-hours">
             <div id="hours" class="time-value">--</div>
             <div class="time-label">Hours</div>
           </div>
-          <div class="time-block">
+          <div class="time-block block-minutes">
             <div id="minutes" class="time-value">--</div>
             <div class="time-label">Minutes</div>
           </div>
-          <div class="time-block">
+          <div class="time-block block-seconds">
             <div id="seconds" class="time-value">--</div>
             <div class="time-label">Seconds</div>
           </div>
@@ -196,7 +262,7 @@
       const now = new Date();
       const currentYear = now.getFullYear();
 
-      // Months are 0-based: 11 = December
+      // Months are 0-based in JS: 11 = December
       let target = new Date(currentYear, 11, 4, 0, 0, 0, 0);
 
       if (now >= target) {
@@ -207,8 +273,10 @@
     }
 
     const targetDate = getNextDecember4th();
+    const cardEl = document.querySelector(".card");
+    const statusEl = document.getElementById("status");
 
-    // Set label text like: December 4, 2025
+    // Set text like: December 4, 2025
     document.getElementById("target-date-text").textContent =
       targetDate.toLocaleDateString(undefined, {
         year: "numeric",
@@ -216,14 +284,35 @@
         day: "numeric",
       });
 
+    let mode = "full"; // "full" | "minutes" | "hours" | "seconds"
+
     function pad(value) {
       return String(value).padStart(2, "0");
+    }
+
+    function updateStatusText() {
+      let modeText = "";
+      switch (mode) {
+        case "minutes":
+          modeText = "Showing total minutes remaining.";
+          break;
+        case "hours":
+          modeText = "Showing total hours remaining.";
+          break;
+        case "seconds":
+          modeText = "Showing total seconds remaining.";
+          break;
+        default:
+          modeText = "Showing days, hours, minutes, and seconds.";
+      }
+
+      statusEl.innerHTML =
+        `Counting down the time left until <strong>December 4th</strong>. ${modeText}`;
     }
 
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = targetDate.getTime() - now;
-      const statusEl = document.getElementById("status");
 
       if (distance <= 0) {
         document.getElementById("days").textContent = "00";
@@ -240,21 +329,52 @@
       const minuteMs = 1000 * 60;
       const secondMs = 1000;
 
+      // Base components (for full mode)
       const days = Math.floor(distance / dayMs);
       const hours = Math.floor((distance % dayMs) / hourMs);
       const minutes = Math.floor((distance % hourMs) / minuteMs);
       const seconds = Math.floor((distance % minuteMs) / secondMs);
 
-      document.getElementById("days").textContent = pad(days);
-      document.getElementById("hours").textContent = pad(hours);
-      document.getElementById("minutes").textContent = pad(minutes);
-      document.getElementById("seconds").textContent = pad(seconds);
+      // Totals for single-unit modes
+      const totalHours = Math.floor(distance / hourMs);
+      const totalMinutes = Math.floor(distance / minuteMs);
+      const totalSeconds = Math.floor(distance / secondMs);
 
-      statusEl.innerHTML =
-        "Counting down the time left until <strong>December 4th</strong>.";
+      if (mode === "full") {
+        document.getElementById("days").textContent = pad(days);
+        document.getElementById("hours").textContent = pad(hours);
+        document.getElementById("minutes").textContent = pad(minutes);
+        document.getElementById("seconds").textContent = pad(seconds);
+      } else if (mode === "minutes") {
+        // Only minutes (total)
+        document.getElementById("minutes").textContent = totalMinutes.toLocaleString();
+      } else if (mode === "hours") {
+        // Only hours (total)
+        document.getElementById("hours").textContent = totalHours.toLocaleString();
+      } else if (mode === "seconds") {
+        // Only seconds (total)
+        document.getElementById("seconds").textContent = totalSeconds.toLocaleString();
+      }
+
+      updateStatusText();
     }
 
-    // Start immediately and then tick every second
+    // Mode switch buttons
+    const modeButtons = document.querySelectorAll(".mode-btn");
+    modeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        mode = btn.getAttribute("data-mode");
+        cardEl.setAttribute("data-mode", mode);
+
+        modeButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Immediately update for new mode
+        updateCountdown();
+      });
+    });
+
+    // Start immediately and then update every second
     updateCountdown();
     setInterval(updateCountdown, 1000);
   </script>
