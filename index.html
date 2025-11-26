@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Doomsday Clock – December 4th</title>
+  <title>Doomsday Countdown</title>
   <style>
     :root {
       --bg: #020106;
@@ -12,7 +12,7 @@
       --primary-soft: rgba(239, 68, 68, 0.12);
       --text-main: #f9fafb;
       --text-muted: #9ca3af;
-      --card-radius: 1.5rem;
+      --card-radius: 1.4rem;
       --shadow-soft: 0 25px 60px rgba(0, 0, 0, 0.9);
       --danger: #ef4444;
       --danger-soft: rgba(248, 113, 113, 0.2);
@@ -39,27 +39,206 @@
     }
 
     main {
-      max-width: 640px;
+      max-width: 960px;
       width: 100%;
     }
 
-    .card {
+    /* ---------- Landing page ---------- */
+
+    #landing {
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .landing-title {
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+      text-align: center;
+    }
+
+    .landing-subtitle {
+      text-align: center;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 1.8rem;
+    }
+
+    .landing-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 720px) {
+      .landing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .landing-card {
+      position: relative;
       background: radial-gradient(circle at top left, #020617, #020106 60%);
       border-radius: var(--card-radius);
       box-shadow: var(--shadow-soft);
       border: 1px solid rgba(148, 27, 27, 0.6);
-      padding: 2.5rem 2.25rem 2.75rem;
+      padding: 1.7rem 1.5rem 1.6rem;
+      cursor: pointer;
+      overflow: hidden;
+      outline: none;
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out,
+        border-color 0.12s ease-out;
+    }
+
+    .landing-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at top, rgba(239, 68, 68, 0.18), transparent 65%),
+        radial-gradient(circle at bottom right, rgba(248, 113, 113, 0.18), transparent 70%);
+      opacity: 0.9;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .landing-card:hover,
+    .landing-card:focus-visible {
+      transform: translateY(-4px);
+      box-shadow:
+        0 28px 70px rgba(0, 0, 0, 0.95),
+        0 0 22px rgba(220, 38, 38, 0.8);
+      border-color: rgba(248, 113, 113, 0.9);
+    }
+
+    .landing-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .landing-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .landing-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .landing-pill {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid rgba(248, 150, 150, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: #fecaca;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .landing-date {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .landing-date span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .mini-block {
+      background: radial-gradient(circle at top, var(--primary-soft), transparent 70%);
+      border-radius: 0.9rem;
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      padding: 0.6rem 0.4rem;
+      text-align: center;
+      backdrop-filter: blur(12px);
+    }
+
+    .mini-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mini-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+
+    .landing-hint {
+      font-size: 0.8rem;
+      color: #fecaca;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .landing-hint span {
+      opacity: 0.8;
+    }
+
+    /* ---------- Detail / doomsday view ---------- */
+
+    #detail-view {
+      display: none;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .back-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      margin-bottom: 0.8rem;
+      padding: 0.15rem 0.4rem;
+    }
+
+    .back-btn:hover {
+      color: #fee2e2;
+    }
+
+    .back-btn span {
+      font-size: 1.1rem;
+    }
+
+    .detail-card {
+      background: radial-gradient(circle at top left, #020617, #020106 60%);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 27, 27, 0.6);
+      padding: 2.4rem 2.1rem 2.6rem;
       position: relative;
       overflow: hidden;
     }
 
     @media (max-width: 640px) {
-      .card {
-        padding: 2rem 1.75rem 2.25rem;
+      .detail-card {
+        padding: 2rem 1.6rem 2.3rem;
       }
     }
 
-    .glow {
+    .detail-glow {
       position: absolute;
       inset: -40%;
       background:
@@ -70,7 +249,7 @@
       mix-blend-mode: screen;
     }
 
-    .scanline {
+    .detail-scanline {
       position: absolute;
       inset: 0;
       background: repeating-linear-gradient(
@@ -85,20 +264,19 @@
       pointer-events: none;
     }
 
-    .card-inner {
+    .detail-inner {
       position: relative;
       z-index: 1;
     }
 
-    /* Doomsday header with glitch effect */
-    .headline-row {
+    .detail-headline-row {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       margin-bottom: 0.35rem;
     }
 
-    .dot {
+    .detail-dot {
       width: 0.9rem;
       height: 0.9rem;
       border-radius: 999px;
@@ -108,14 +286,6 @@
         0 0 30px rgba(220, 38, 38, 0.7);
       flex-shrink: 0;
       animation: pulse 1.4s infinite alternate;
-    }
-
-    .dot::after {
-      content: "";
-      position: absolute;
-      width: 0.9rem;
-      height: 0.9rem;
-      border-radius: 999px;
     }
 
     @keyframes pulse {
@@ -129,74 +299,43 @@
       }
     }
 
-    h1 {
+    .detail-title {
       font-size: clamp(2.1rem, 3.1vw, 2.6rem);
       font-weight: 800;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      position: relative;
       color: var(--primary);
       text-shadow:
         0 0 8px rgba(248, 113, 113, 0.7),
         0 0 20px rgba(248, 113, 113, 0.5);
     }
 
-    .glitch {
-      position: relative;
-      display: inline-block;
+    .detail-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(248, 150, 150, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: #fecaca;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 0.4rem;
     }
 
-    .glitch::before,
-    .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      overflow: hidden;
-      clip-path: inset(0 0 50% 0);
-      opacity: 0.75;
-      pointer-events: none;
-    }
-
-    .glitch::before {
-      transform: translate(-1px, -1px);
-      color: #f97373;
-      mix-blend-mode: screen;
-      animation: glitchTop 2s infinite linear alternate-reverse;
-    }
-
-    .glitch::after {
-      transform: translate(1px, 1px);
-      color: #fb7185;
-      mix-blend-mode: screen;
-      clip-path: inset(50% 0 0 0);
-      animation: glitchBottom 1.7s infinite linear alternate-reverse;
-    }
-
-    @keyframes glitchTop {
-      0% { clip-path: inset(0 0 55% 0); }
-      50% { clip-path: inset(0 0 30% 0); transform: translate(-1px, -0.5px); }
-      100% { clip-path: inset(0 0 45% 0); transform: translate(-0.5px, -1px); }
-    }
-
-    @keyframes glitchBottom {
-      0% { clip-path: inset(55% 0 0 0); }
-      50% { clip-path: inset(35% 0 0 0); transform: translate(0.5px, 1px); }
-      100% { clip-path: inset(45% 0 0 0); transform: translate(1px, 0.5px); }
-    }
-
-    .subtitle {
+    .detail-subtitle {
       font-size: 0.95rem;
       color: var(--text-muted);
       margin-bottom: 1rem;
     }
 
-    .subtitle strong {
+    .detail-subtitle strong {
       color: var(--danger);
     }
 
-    .target-date {
+    .detail-subtitle .detail-date-text {
       color: var(--primary);
       font-weight: 600;
     }
@@ -213,7 +352,7 @@
       box-shadow: 0 0 18px rgba(127, 29, 29, 0.5);
     }
 
-    .mode-btn {
+    .detail-mode-btn {
       border: none;
       outline: none;
       background: transparent;
@@ -228,19 +367,19 @@
       text-transform: uppercase;
     }
 
-    .mode-btn.active {
+    .detail-mode-btn.active {
       background: var(--danger);
       color: #020106;
       transform: translateY(-1px);
       box-shadow: 0 0 18px rgba(248, 113, 113, 0.6);
     }
 
-    .mode-btn:hover:not(.active) {
+    .detail-mode-btn:hover:not(.active) {
       background: rgba(127, 29, 29, 0.7);
       color: #f9fafb;
     }
 
-    .countdown-grid {
+    .detail-countdown-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.9rem;
@@ -248,12 +387,12 @@
     }
 
     @media (min-width: 480px) {
-      .countdown-grid {
+      .detail-countdown-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
     }
 
-    .time-block {
+    .detail-time-block {
       background: radial-gradient(circle at top, var(--primary-soft), transparent 65%);
       border: 1px solid rgba(248, 113, 113, 0.45);
       border-radius: 1rem;
@@ -265,7 +404,7 @@
         0 0 10px rgba(127, 29, 29, 0.5);
     }
 
-    .time-value {
+    .detail-time-value {
       font-size: clamp(1.7rem, 3.2vw, 2.1rem);
       font-weight: 800;
       letter-spacing: 0.16em;
@@ -275,141 +414,299 @@
       word-break: break-all;
     }
 
-    .time-label {
+    .detail-time-label {
       font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.22em;
       color: var(--text-muted);
     }
 
-    .status {
+    .detail-status {
       font-size: 0.9rem;
       color: var(--text-muted);
     }
 
-    .status strong {
+    .detail-status strong {
       color: var(--primary);
       font-weight: 600;
     }
 
-    .status span.mode-text {
+    .detail-status span.mode-text {
       color: #fca5a5;
     }
 
-    .done {
+    .detail-done {
       color: #22c55e;
       text-shadow:
         0 0 8px rgba(34, 197, 94, 0.8),
         0 0 20px rgba(34, 197, 94, 0.6);
     }
 
-    /* Mode-specific visibility */
-    .card[data-mode="minutes"] .block-days,
-    .card[data-mode="minutes"] .block-hours,
-    .card[data-mode="minutes"] .block-seconds {
+    /* Mode-specific visibility for detail card */
+    .detail-card[data-mode="minutes"] .block-days,
+    .detail-card[data-mode="minutes"] .block-hours,
+    .detail-card[data-mode="minutes"] .block-seconds {
       display: none;
     }
 
-    .card[data-mode="hours"] .block-days,
-    .card[data-mode="hours"] .block-minutes,
-    .card[data-mode="hours"] .block-seconds {
+    .detail-card[data-mode="hours"] .block-days,
+    .detail-card[data-mode="hours"] .block-minutes,
+    .detail-card[data-mode="hours"] .block-seconds {
       display: none;
     }
 
-    .card[data-mode="seconds"] .block-days,
-    .card[data-mode="seconds"] .block-hours,
-    .card[data-mode="seconds"] .block-minutes {
+    .detail-card[data-mode="seconds"] .block-days,
+    .detail-card[data-mode="seconds"] .block-hours,
+    .detail-card[data-mode="seconds"] .block-minutes {
       display: none;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body>
   <main>
-    <section class="card" aria-label="Doomsday countdown to December 4th" data-mode="full">
-      <div class="glow" aria-hidden="true"></div>
-      <div class="scanline" aria-hidden="true"></div>
-      <div class="card-inner">
-        <div class="headline-row">
-          <span class="dot" aria-hidden="true"></span>
-          <h1 class="glitch" data-text="Doomsday Clock">Doomsday Clock</h1>
+    <!-- LANDING PAGE -->
+    <section id="landing">
+      <h1 class="landing-title">Doomsday Overview</h1>
+      <p class="landing-subtitle">
+        Velg hvilken dato du vil se nedtellingen for. Klikk på et kort for å åpne detaljvisning.
+      </p>
+
+      <div class="landing-grid">
+        <!-- December 1 -->
+        <article class="landing-card" data-key="dec1" tabindex="0">
+          <div class="landing-card-inner">
+            <div class="landing-header">
+              <div class="landing-name">December 1</div>
+              <div class="landing-pill">Doomsday A</div>
+            </div>
+            <p class="landing-date">
+              Next occurrence:
+              <span id="dec1-date-text">--</span>
+            </p>
+            <div class="mini-grid">
+              <div class="mini-block">
+                <div id="dec1-days" class="mini-value">--</div>
+                <div class="mini-label">Days</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec1-hours" class="mini-value">--</div>
+                <div class="mini-label">Hours</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec1-minutes" class="mini-value">--</div>
+                <div class="mini-label">Minutes</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec1-seconds" class="mini-value">--</div>
+                <div class="mini-label">Seconds</div>
+              </div>
+            </div>
+            <p class="landing-hint">
+              <span>Click to open detail view</span>
+            </p>
+          </div>
+        </article>
+
+        <!-- December 4 -->
+        <article class="landing-card" data-key="dec4" tabindex="0">
+          <div class="landing-card-inner">
+            <div class="landing-header">
+              <div class="landing-name">December 4</div>
+              <div class="landing-pill">Doomsday B</div>
+            </div>
+            <p class="landing-date">
+              Next occurrence:
+              <span id="dec4-date-text">--</span>
+            </p>
+            <div class="mini-grid">
+              <div class="mini-block">
+                <div id="dec4-days" class="mini-value">--</div>
+                <div class="mini-label">Days</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec4-hours" class="mini-value">--</div>
+                <div class="mini-label">Hours</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec4-minutes" class="mini-value">--</div>
+                <div class="mini-label">Minutes</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec4-seconds" class="mini-value">--</div>
+                <div class="mini-label">Seconds</div>
+              </div>
+            </div>
+            <p class="landing-hint">
+              <span>Click to open detail view</span>
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- DETAIL VIEW -->
+    <section id="detail-view">
+      <button id="back-button" class="back-btn">
+        <span>←</span> Back to overview
+      </button>
+
+      <div id="detail-card" class="detail-card" data-mode="full">
+        <div class="detail-glow" aria-hidden="true"></div>
+        <div class="detail-scanline" aria-hidden="true"></div>
+        <div class="detail-inner">
+          <div class="detail-headline-row">
+            <span class="detail-dot" aria-hidden="true"></span>
+            <h1 class="detail-title">Doomsday Clock</h1>
+          </div>
+
+          <div class="detail-tag">
+            Target date: <span id="detail-tag-label">December 1</span>
+          </div>
+
+          <p class="detail-subtitle">
+            Time remaining until <strong>Doomsday</strong> on
+            <span id="detail-date-text" class="detail-date-text"></span>.
+          </p>
+
+          <div class="mode-switch" aria-label="Choose countdown display mode">
+            <button class="detail-mode-btn active" data-mode="full">Full</button>
+            <button class="detail-mode-btn" data-mode="minutes">Only minutes</button>
+            <button class="detail-mode-btn" data-mode="hours">Only hours</button>
+            <button class="detail-mode-btn" data-mode="seconds">Only seconds</button>
+          </div>
+
+          <div class="detail-countdown-grid" aria-live="polite">
+            <div class="detail-time-block block-days">
+              <div id="detail-days" class="detail-time-value">--</div>
+              <div class="detail-time-label">Days</div>
+            </div>
+            <div class="detail-time-block block-hours">
+              <div id="detail-hours" class="detail-time-value">--</div>
+              <div class="detail-time-label">Hours</div>
+            </div>
+            <div class="detail-time-block block-minutes">
+              <div id="detail-minutes" class="detail-time-value">--</div>
+              <div class="detail-time-label">Minutes</div>
+            </div>
+            <div class="detail-time-block block-seconds">
+              <div id="detail-seconds" class="detail-time-value">--</div>
+              <div class="detail-time-label">Seconds</div>
+            </div>
+          </div>
+
+          <p id="detail-status" class="detail-status">
+            Initializing doomsday sequence…
+          </p>
         </div>
-
-        <p class="subtitle">
-          Time remaining until <strong>Doomsday</strong> on
-          <span id="target-date-text" class="target-date"></span>
-        </p>
-
-        <!-- MODE SWITCHER -->
-        <div class="mode-switch" aria-label="Choose countdown display mode">
-          <button class="mode-btn active" data-mode="full">Full</button>
-          <button class="mode-btn" data-mode="minutes">Only minutes</button>
-          <button class="mode-btn" data-mode="hours">Only hours</button>
-          <button class="mode-btn" data-mode="seconds">Only seconds</button>
-        </div>
-
-        <!-- COUNTDOWN VALUES -->
-        <div class="countdown-grid" aria-live="polite">
-          <div class="time-block block-days">
-            <div id="days" class="time-value">--</div>
-            <div class="time-label">Days</div>
-          </div>
-          <div class="time-block block-hours">
-            <div id="hours" class="time-value">--</div>
-            <div class="time-label">Hours</div>
-          </div>
-          <div class="time-block block-minutes">
-            <div id="minutes" class="time-value">--</div>
-            <div class="time-label">Minutes</div>
-          </div>
-          <div class="time-block block-seconds">
-            <div id="seconds" class="time-value">--</div>
-            <div class="time-label">Seconds</div>
-          </div>
-        </div>
-
-        <p id="status" class="status">
-          Initializing doomsday sequence…
-        </p>
       </div>
     </section>
   </main>
 
   <script>
-    // Always count down to the *next* December 4th
-    function getNextDecember4th() {
+    function getNextDate(monthIndex, day) {
       const now = new Date();
       const currentYear = now.getFullYear();
-
-      // Months are 0-based: 11 = December
-      let target = new Date(currentYear, 11, 4, 0, 0, 0, 0);
-
+      let target = new Date(currentYear, monthIndex, day, 0, 0, 0, 0);
       if (now >= target) {
-        target = new Date(currentYear + 1, 11, 4, 0, 0, 0, 0);
+        target = new Date(currentYear + 1, monthIndex, day, 0, 0, 0, 0);
       }
-
       return target;
     }
 
-    const targetDate = getNextDecember4th();
-    const cardEl = document.querySelector(".card");
-    const statusEl = document.getElementById("status");
+    const targets = {
+      dec1: getNextDate(11, 1), // December = 11 (0-based)
+      dec4: getNextDate(11, 4),
+    };
 
-    // Display like: December 4, 2025
-    document.getElementById("target-date-text").textContent =
-      targetDate.toLocaleDateString(undefined, {
+    const landingSection = document.getElementById("landing");
+    const detailSection = document.getElementById("detail-view");
+
+    // Set date labels on landing cards
+    document.getElementById("dec1-date-text").textContent =
+      targets.dec1.toLocaleDateString(undefined, {
         year: "numeric",
         month: "long",
         day: "numeric",
       });
 
-    let mode = "full"; // "full" | "minutes" | "hours" | "seconds"
+    document.getElementById("dec4-date-text").textContent =
+      targets.dec4.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
 
     function pad(value) {
       return String(value).padStart(2, "0");
     }
 
+    // Update mini countdowns on landing
+    function updateMiniCountdown(idPrefix, targetDate) {
+      const now = Date.now();
+      const distance = targetDate.getTime() - now;
+
+      const daysEl = document.getElementById(idPrefix + "-days");
+      const hoursEl = document.getElementById(idPrefix + "-hours");
+      const minutesEl = document.getElementById(idPrefix + "-minutes");
+      const secondsEl = document.getElementById(idPrefix + "-seconds");
+      if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+      if (distance <= 0) {
+        daysEl.textContent = "00";
+        hoursEl.textContent = "00";
+        minutesEl.textContent = "00";
+        secondsEl.textContent = "00";
+        return;
+      }
+
+      const dayMs = 1000 * 60 * 60 * 24;
+      const hourMs = 1000 * 60 * 60;
+      const minuteMs = 1000 * 60;
+      const secondMs = 1000;
+
+      const days = Math.floor(distance / dayMs);
+      const hours = Math.floor((distance % dayMs) / hourMs);
+      const minutes = Math.floor((distance % hourMs) / minuteMs);
+      const seconds = Math.floor((distance % minuteMs) / secondMs);
+
+      daysEl.textContent = pad(days);
+      hoursEl.textContent = pad(hours);
+      minutesEl.textContent = pad(minutes);
+      secondsEl.textContent = pad(seconds);
+    }
+
+    function updateLanding() {
+      updateMiniCountdown("dec1", targets.dec1);
+      updateMiniCountdown("dec4", targets.dec4);
+    }
+
+    updateLanding();
+    setInterval(updateLanding, 1000);
+
+    // ---------- Detail view logic ----------
+
+    const detailCardEl = document.getElementById("detail-card");
+    const detailStatusEl = document.getElementById("detail-status");
+    const detailDateTextEl = document.getElementById("detail-date-text");
+    const detailTagLabelEl = document.getElementById("detail-tag-label");
+
+    let detailMode = "full";
+    let detailTargetKey = "dec1";
+    let detailIntervalId = null;
+
     function modeDescription() {
-      switch (mode) {
+      switch (detailMode) {
         case "minutes":
           return "Only minutes mode: total minutes remaining.";
         case "hours":
@@ -421,23 +718,35 @@
       }
     }
 
-    function updateStatusText() {
-      statusEl.innerHTML =
-        `Doomsday sequence active. Time until <strong>December 4th</strong>. ` +
+    function updateDetailStatus() {
+      const label = detailTargetKey === "dec1" ? "December 1" : "December 4";
+      detailStatusEl.innerHTML =
+        `Doomsday sequence active. Time until <strong>${label}</strong>. ` +
         `<span class="mode-text">${modeDescription()}</span>`;
     }
 
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = targetDate.getTime() - now;
+    function updateDetailCountdown() {
+      const target = targets[detailTargetKey];
+      const now = Date.now();
+      const distance = target.getTime() - now;
+      const label = detailTargetKey === "dec1" ? "December 1" : "December 4";
+
+      const daysEl = document.getElementById("detail-days");
+      const hoursEl = document.getElementById("detail-hours");
+      const minutesEl = document.getElementById("detail-minutes");
+      const secondsEl = document.getElementById("detail-seconds");
 
       if (distance <= 0) {
-        document.getElementById("days").textContent = "00";
-        document.getElementById("hours").textContent = "00";
-        document.getElementById("minutes").textContent = "00";
-        document.getElementById("seconds").textContent = "00";
-        statusEl.innerHTML =
-          '<span class="done"><strong>Doomsday has arrived. 🎉 (Or… maybe you survived.)</strong></span>';
+        daysEl.textContent = "00";
+        hoursEl.textContent = "00";
+        minutesEl.textContent = "00";
+        secondsEl.textContent = "00";
+        detailStatusEl.innerHTML =
+          `<span class="detail-done"><strong>Doomsday for ${label} has arrived. 🎉</strong></span>`;
+        if (detailIntervalId) {
+          clearInterval(detailIntervalId);
+          detailIntervalId = null;
+        }
         return;
       }
 
@@ -446,50 +755,103 @@
       const minuteMs = 1000 * 60;
       const secondMs = 1000;
 
-      // Base components (for full mode)
       const days = Math.floor(distance / dayMs);
       const hours = Math.floor((distance % dayMs) / hourMs);
       const minutes = Math.floor((distance % hourMs) / minuteMs);
       const seconds = Math.floor((distance % minuteMs) / secondMs);
 
-      // Totals for single-unit modes
       const totalHours = Math.floor(distance / hourMs);
       const totalMinutes = Math.floor(distance / minuteMs);
       const totalSeconds = Math.floor(distance / secondMs);
 
-      if (mode === "full") {
-        document.getElementById("days").textContent = pad(days);
-        document.getElementById("hours").textContent = pad(hours);
-        document.getElementById("minutes").textContent = pad(minutes);
-        document.getElementById("seconds").textContent = pad(seconds);
-      } else if (mode === "minutes") {
-        document.getElementById("minutes").textContent = totalMinutes.toLocaleString();
-      } else if (mode === "hours") {
-        document.getElementById("hours").textContent = totalHours.toLocaleString();
-      } else if (mode === "seconds") {
-        document.getElementById("seconds").textContent = totalSeconds.toLocaleString();
+      if (detailMode === "full") {
+        daysEl.textContent = pad(days);
+        hoursEl.textContent = pad(hours);
+        minutesEl.textContent = pad(minutes);
+        secondsEl.textContent = pad(seconds);
+      } else if (detailMode === "minutes") {
+        minutesEl.textContent = totalMinutes.toLocaleString();
+      } else if (detailMode === "hours") {
+        hoursEl.textContent = totalHours.toLocaleString();
+      } else if (detailMode === "seconds") {
+        secondsEl.textContent = totalSeconds.toLocaleString();
       }
 
-      updateStatusText();
+      updateDetailStatus();
     }
 
-    // Mode switch buttons
-    const modeButtons = document.querySelectorAll(".mode-btn");
-    modeButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        mode = btn.getAttribute("data-mode");
-        cardEl.setAttribute("data-mode", mode);
+    function startDetailTimer() {
+      if (detailIntervalId) {
+        clearInterval(detailIntervalId);
+      }
+      updateDetailCountdown();
+      detailIntervalId = setInterval(updateDetailCountdown, 1000);
+    }
 
-        modeButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
+    function openDetail(key) {
+      detailTargetKey = key;
+      detailMode = "full";
+      detailCardEl.setAttribute("data-mode", detailMode);
 
-        updateCountdown(); // refresh instantly
+      const label = key === "dec1" ? "December 1" : "December 4";
+      detailTagLabelEl.textContent = label;
+      detailDateTextEl.textContent = targets[key].toLocaleDateString(
+        undefined,
+        { year: "numeric", month: "long", day: "numeric" }
+      );
+
+      // reset mode button styling
+      const buttons = document.querySelectorAll(".detail-mode-btn");
+      buttons.forEach((btn) => {
+        btn.classList.toggle(
+          "active",
+          btn.getAttribute("data-mode") === detailMode
+        );
+      });
+
+      landingSection.style.display = "none";
+      detailSection.style.display = "block";
+
+      startDetailTimer();
+    }
+
+    // Click + keyboard on landing cards
+    document.querySelectorAll(".landing-card").forEach((card) => {
+      const key = card.getAttribute("data-key");
+      card.addEventListener("click", () => openDetail(key));
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openDetail(key);
+        }
       });
     });
 
-    // Start immediately and tick every second
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    // Back button
+    document.getElementById("back-button").addEventListener("click", () => {
+      detailSection.style.display = "none";
+      landingSection.style.display = "block";
+      if (detailIntervalId) {
+        clearInterval(detailIntervalId);
+        detailIntervalId = null;
+      }
+    });
+
+    // Detail mode buttons
+    document.querySelectorAll(".detail-mode-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        detailMode = btn.getAttribute("data-mode");
+        detailCardEl.setAttribute("data-mode", detailMode);
+
+        document.querySelectorAll(".detail-mode-btn").forEach((b) =>
+          b.classList.remove("active")
+        );
+        btn.classList.add("active");
+
+        updateDetailCountdown();
+      });
+    });
   </script>
 </body>
 </html>
+
