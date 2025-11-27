@@ -492,7 +492,7 @@
             </div>
             <p class="landing-date">
               Next occurrence:
-              <span id="dec1-date-text">--</span>
+              <span id="dec1-date-text">--</span> at 09:00
             </p>
             <div class="mini-grid">
               <div class="mini-block">
@@ -527,7 +527,7 @@
             </div>
             <p class="landing-date">
               Next occurrence:
-              <span id="dec4-date-text">--</span>
+              <span id="dec4-date-text">--</span> at 09:00
             </p>
             <div class="mini-grid">
               <div class="mini-block">
@@ -544,6 +544,76 @@
               </div>
               <div class="mini-block">
                 <div id="dec4-seconds" class="mini-value">--</div>
+                <div class="mini-label">Seconds</div>
+              </div>
+            </div>
+            <p class="landing-hint">
+              <span>Click to open detail view</span>
+            </p>
+          </div>
+        </article>
+
+        <!-- December 9 -->
+        <article class="landing-card" data-key="dec9" tabindex="0">
+          <div class="landing-card-inner">
+            <div class="landing-header">
+              <div class="landing-name">December 9</div>
+              <div class="landing-pill">Doomsday Softare</div>
+            </div>
+            <p class="landing-date">
+              Next occurrence:
+              <span id="dec9-date-text">--</span> at 09:00
+            </p>
+            <div class="mini-grid">
+              <div class="mini-block">
+                <div id="dec9-days" class="mini-value">--</div>
+                <div class="mini-label">Days</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec9-hours" class="mini-value">--</div>
+                <div class="mini-label">Hours</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec9-minutes" class="mini-value">--</div>
+                <div class="mini-label">Minutes</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec9-seconds" class="mini-value">--</div>
+                <div class="mini-label">Seconds</div>
+              </div>
+            </div>
+            <p class="landing-hint">
+              <span>Click to open detail view</span>
+            </p>
+          </div>
+        </article>
+
+        <!-- December 19 -->
+        <article class="landing-card" data-key="dec19" tabindex="0">
+          <div class="landing-card-inner">
+            <div class="landing-header">
+              <div class="landing-name">December 19</div>
+              <div class="landing-pill">Doomsday OS</div>
+            </div>
+            <p class="landing-date">
+              Next occurrence:
+              <span id="dec19-date-text">--</span> at 09:00
+            </p>
+            <div class="mini-grid">
+              <div class="mini-block">
+                <div id="dec19-days" class="mini-value">--</div>
+                <div class="mini-label">Days</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec19-hours" class="mini-value">--</div>
+                <div class="mini-label">Hours</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec19-minutes" class="mini-value">--</div>
+                <div class="mini-label">Minutes</div>
+              </div>
+              <div class="mini-block">
+                <div id="dec19-seconds" class="mini-value">--</div>
                 <div class="mini-label">Seconds</div>
               </div>
             </div>
@@ -571,12 +641,12 @@
           </div>
 
           <div class="detail-tag">
-            Target date: <span id="detail-tag-label">December 1</span>
+            Target date: <span id="detail-tag-label">December 1</span> · 09:00
           </div>
 
           <p class="detail-subtitle">
             Time remaining until <strong>Doomsday</strong> on
-            <span id="detail-date-text" class="detail-date-text"></span>.
+            <span id="detail-date-text" class="detail-date-text"></span> at 09:00.
           </p>
 
           <div class="mode-switch" aria-label="Choose countdown display mode">
@@ -614,30 +684,40 @@
   </main>
 
   <script>
+    // Teller ned til kl. 09:00 lokal tid på valgt dag
     function getNextDate(monthIndex, day) {
       const now = new Date();
       const currentYear = now.getFullYear();
-    
-      // Nytt mål: kl 09:00 på morgenen
+
+      // 09:00 om morgenen
       let target = new Date(currentYear, monthIndex, day, 9, 0, 0, 0);
-    
-      // Hvis dato/tid allerede har passert i år → hopp til neste år
+
+      // Hvis dato + 09:00 allerede har passert, bruk neste år
       if (now >= target) {
         target = new Date(currentYear + 1, monthIndex, day, 9, 0, 0, 0);
       }
-    
+
       return target;
     }
 
     const targets = {
-      dec1: getNextDate(11, 1), // December = 11 (0-based)
-      dec4: getNextDate(11, 4),
+      dec1: getNextDate(11, 1),  // 1. desember kl. 09:00
+      dec4: getNextDate(11, 4),  // 4. desember kl. 09:00
+      dec9: getNextDate(11, 9),  // 9. desember kl. 09:00
+      dec19: getNextDate(11, 19) // 19. desember kl. 09:00
+    };
+
+    const labels = {
+      dec1: "December 1",
+      dec4: "December 4",
+      dec9: "December 9",
+      dec19: "December 19"
     };
 
     const landingSection = document.getElementById("landing");
     const detailSection = document.getElementById("detail-view");
 
-    // Set date labels on landing cards
+    // Set date labels on landing cards (dato, ikke tid)
     document.getElementById("dec1-date-text").textContent =
       targets.dec1.toLocaleDateString(undefined, {
         year: "numeric",
@@ -647,6 +727,20 @@
 
     document.getElementById("dec4-date-text").textContent =
       targets.dec4.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+    document.getElementById("dec9-date-text").textContent =
+      targets.dec9.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+    document.getElementById("dec19-date-text").textContent =
+      targets.dec19.toLocaleDateString(undefined, {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -694,6 +788,8 @@
     function updateLanding() {
       updateMiniCountdown("dec1", targets.dec1);
       updateMiniCountdown("dec4", targets.dec4);
+      updateMiniCountdown("dec9", targets.dec9);
+      updateMiniCountdown("dec19", targets.dec19);
     }
 
     updateLanding();
@@ -724,7 +820,7 @@
     }
 
     function updateDetailStatus() {
-      const label = detailTargetKey === "dec1" ? "December 1" : "December 4";
+      const label = labels[detailTargetKey] + ", 09:00";
       detailStatusEl.innerHTML =
         `Doomsday sequence active. Time until <strong>${label}</strong>. ` +
         `<span class="mode-text">${modeDescription()}</span>`;
@@ -734,7 +830,7 @@
       const target = targets[detailTargetKey];
       const now = Date.now();
       const distance = target.getTime() - now;
-      const label = detailTargetKey === "dec1" ? "December 1" : "December 4";
+      const label = labels[detailTargetKey];
 
       const daysEl = document.getElementById("detail-days");
       const hoursEl = document.getElementById("detail-hours");
@@ -798,7 +894,7 @@
       detailMode = "full";
       detailCardEl.setAttribute("data-mode", detailMode);
 
-      const label = key === "dec1" ? "December 1" : "December 4";
+      const label = labels[key];
       detailTagLabelEl.textContent = label;
       detailDateTextEl.textContent = targets[key].toLocaleDateString(
         undefined,
@@ -859,4 +955,3 @@
   </script>
 </body>
 </html>
-
