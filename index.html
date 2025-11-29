@@ -43,8 +43,6 @@
       width: 100%;
     }
 
-    /* ---------- Landing page ---------- */
-
     #landing {
       animation: fadeIn 0.4s ease-out;
     }
@@ -193,8 +191,6 @@
     .landing-hint span {
       opacity: 0.8;
     }
-
-    /* ---------- Detail / doomsday view ---------- */
 
     #detail-view {
       display: none;
@@ -443,7 +439,6 @@
         0 0 20px rgba(34, 197, 94, 0.6);
     }
 
-    /* Mode-specific visibility for detail card */
     .detail-card[data-mode="minutes"] .block-days,
     .detail-card[data-mode="minutes"] .block-hours,
     .detail-card[data-mode="minutes"] .block-seconds {
@@ -468,6 +463,23 @@
       grid-column: 1 / -1;
     }
 
+    @media (max-width: 480px) {
+      .mini-label {
+        font-size: 0.55rem;
+        letter-spacing: 0.12em;
+      }
+
+      .mode-switch {
+        padding: 0.3rem 0.35rem;
+        gap: 0.25rem;
+      }
+
+      .detail-mode-btn {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.55rem;
+      }
+    }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -482,7 +494,6 @@
 </head>
 <body>
   <main>
-    <!-- LANDING PAGE -->
     <section id="landing">
       <h1 class="landing-title">Doomsday Overview</h1>
       <p class="landing-subtitle">
@@ -490,7 +501,6 @@
       </p>
 
       <div class="landing-grid">
-        <!-- December 1 -->
         <article class="landing-card" data-key="dec1" tabindex="0">
           <div class="landing-card-inner">
             <div class="landing-header">
@@ -525,7 +535,6 @@
           </div>
         </article>
 
-        <!-- December 4 -->
         <article class="landing-card" data-key="dec4" tabindex="0">
           <div class="landing-card-inner">
             <div class="landing-header">
@@ -560,7 +569,6 @@
           </div>
         </article>
 
-        <!-- December 9 -->
         <article class="landing-card" data-key="dec9" tabindex="0">
           <div class="landing-card-inner">
             <div class="landing-header">
@@ -595,7 +603,6 @@
           </div>
         </article>
 
-        <!-- December 19 -->
         <article class="landing-card" data-key="dec19" tabindex="0">
           <div class="landing-card-inner">
             <div class="landing-header">
@@ -632,7 +639,6 @@
       </div>
     </section>
 
-    <!-- DETAIL VIEW -->
     <section id="detail-view">
       <button id="back-button" class="back-btn">
         <span>←</span> Back to overview
@@ -691,27 +697,21 @@
   </main>
 
   <script>
-    // Teller ned til kl. 09:00 lokal tid på valgt dag
     function getNextDate(monthIndex, day) {
       const now = new Date();
       const currentYear = now.getFullYear();
-
-      // 09:00 om morgenen
       let target = new Date(currentYear, monthIndex, day, 9, 0, 0, 0);
-
-      // Hvis dato + 09:00 allerede har passert, bruk neste år
       if (now >= target) {
         target = new Date(currentYear + 1, monthIndex, day, 9, 0, 0, 0);
       }
-
       return target;
     }
 
     const targets = {
-      dec1: getNextDate(11, 1),  // 1. desember kl. 09:00
-      dec4: getNextDate(11, 4),  // 4. desember kl. 09:00
-      dec9: getNextDate(11, 9),  // 9. desember kl. 09:00
-      dec19: getNextDate(11, 19) // 19. desember kl. 09:00
+      dec1: getNextDate(11, 1),
+      dec4: getNextDate(11, 4),
+      dec9: getNextDate(11, 9),
+      dec19: getNextDate(11, 19)
     };
 
     const labels = {
@@ -724,7 +724,6 @@
     const landingSection = document.getElementById("landing");
     const detailSection = document.getElementById("detail-view");
 
-    // Set date labels on landing cards (dato, ikke tid)
     document.getElementById("dec1-date-text").textContent =
       targets.dec1.toLocaleDateString(undefined, {
         year: "numeric",
@@ -757,7 +756,6 @@
       return String(value).padStart(2, "0");
     }
 
-    // Update mini countdowns on landing
     function updateMiniCountdown(idPrefix, targetDate) {
       const now = Date.now();
       const distance = targetDate.getTime() - now;
@@ -801,8 +799,6 @@
 
     updateLanding();
     setInterval(updateLanding, 1000);
-
-    // ---------- Detail view logic ----------
 
     const detailCardEl = document.getElementById("detail-card");
     const detailStatusEl = document.getElementById("detail-status");
@@ -958,3 +954,4 @@
   </script>
 </body>
 </html>
+
