@@ -345,14 +345,13 @@
       flex-wrap: wrap;
       gap: 0.35rem;
       margin-bottom: 1.25rem;
-      padding: 0.35rem 0.5rem; 
+      padding: 0.35rem 0.5rem;
       border-radius: 999px;
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(127, 29, 29, 0.8);
       box-shadow: 0 0 18px rgba(127, 29, 29, 0.5);
-      overflow: hidden;         
+      overflow: hidden;
     }
-
 
     .detail-mode-btn {
       border: none;
@@ -413,7 +412,7 @@
       margin-bottom: 0.15rem;
       font-variant-numeric: tabular-nums;
       text-transform: uppercase;
-      word-break: break-all;
+      white-space: nowrap;
     }
 
     .detail-time-label {
@@ -461,6 +460,12 @@
     .detail-card[data-mode="seconds"] .block-hours,
     .detail-card[data-mode="seconds"] .block-minutes {
       display: none;
+    }
+
+    .detail-card[data-mode="seconds"] .block-seconds,
+    .detail-card[data-mode="minutes"] .block-minutes,
+    .detail-card[data-mode="hours"] .block-hours {
+      grid-column: 1 / -1;
     }
 
     @keyframes fadeIn {
@@ -903,7 +908,6 @@
         { year: "numeric", month: "long", day: "numeric" }
       );
 
-      // reset mode button styling
       const buttons = document.querySelectorAll(".detail-mode-btn");
       buttons.forEach((btn) => {
         btn.classList.toggle(
@@ -918,7 +922,6 @@
       startDetailTimer();
     }
 
-    // Click + keyboard on landing cards
     document.querySelectorAll(".landing-card").forEach((card) => {
       const key = card.getAttribute("data-key");
       card.addEventListener("click", () => openDetail(key));
@@ -930,7 +933,6 @@
       });
     });
 
-    // Back button
     document.getElementById("back-button").addEventListener("click", () => {
       detailSection.style.display = "none";
       landingSection.style.display = "block";
@@ -940,7 +942,6 @@
       }
     });
 
-    // Detail mode buttons
     document.querySelectorAll(".detail-mode-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         detailMode = btn.getAttribute("data-mode");
