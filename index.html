@@ -464,6 +464,11 @@
     }
 
     @media (max-width: 480px) {
+      .mini-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.8rem;
+      }
+
       .mini-label {
         font-size: 0.55rem;
         letter-spacing: 0.12em;
@@ -472,11 +477,15 @@
       .mode-switch {
         padding: 0.3rem 0.35rem;
         gap: 0.25rem;
+        width: 100%;
+        justify-content: space-between;
       }
 
       .detail-mode-btn {
         font-size: 0.7rem;
         padding: 0.3rem 0.55rem;
+        flex: 1 1 calc(50% - 0.4rem);
+        text-align: center;
       }
     }
 
@@ -915,6 +924,10 @@
       landingSection.style.display = "none";
       detailSection.style.display = "block";
 
+      try {
+        localStorage.setItem("lastDoomsdayKey", key);
+      } catch (e) {}
+
       startDetailTimer();
     }
 
@@ -951,7 +964,17 @@
         updateDetailCountdown();
       });
     });
+
+    (function restoreLastViewed() {
+      try {
+        const savedKey = localStorage.getItem("lastDoomsdayKey");
+        if (savedKey && targets[savedKey]) {
+          openDetail(savedKey);
+        }
+      } catch (e) {}
+    })();
   </script>
 </body>
 </html>
+
 
